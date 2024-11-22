@@ -1,7 +1,3 @@
-cache:
-  cache_paths:
-    - ~/$HOME/.gradle/caches
-
 workflows:
   native-android:
     name: Native Android
@@ -17,3 +13,7 @@ workflows:
           ./gradlew bundleRelease
     artifacts:
       - app/build/outputs/**/*.aab
+
+    cache:
+      cache_paths:
+        - ~/$HOME/.gradle/caches
