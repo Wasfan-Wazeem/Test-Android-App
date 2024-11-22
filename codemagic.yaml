@@ -1,3 +1,7 @@
+cache:
+  cache_paths:
+    - ~/$HOME/.gradle/caches
+
 workflows:
   native-android:
     name: Native Android
