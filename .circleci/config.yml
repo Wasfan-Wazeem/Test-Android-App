@@ -1,14 +1,36 @@
 version: 2.1
 
-orbs:
-  android: circleci/android@2.4.0
+jobs:
+  build:
+    machine:
+      image: android:default
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: Create AVD
+          command: |
+            SYSTEM_IMAGES="system-images;android-29;default;x86"
+            sdkmanager "$SYSTEM_IMAGES"
+            echo "no" | avdmanager --verbose create avd -n test -k "$SYSTEM_IMAGES"
+      - run:
+          name: Launch Emulator
+          command: |
+            emulator -avd test -delay-adb -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          background: true
+      - restore_cache:
+          key: gradle-v1-{{ checksum "build.gradle" }}
+      - run:
+          name: Assemble Debug Android Test
+          command: ./gradlew assembleDebugAndroidTest
+      - run:
+          name: Wait for Emulator Boot
+          command: circle-android wait-for-boot
+      - run:
+          name: Run UI Tests
+          command: ./gradlew connectedDebugAndroidTest
 
 workflows:
   test:
     jobs:
-      - android/run-ui-tests:
-          executor:
-            name: android/android-machine
-            resource-class: large
-          system-image: system-images;android-29;default;x86
-          tag: 2021.10.1
+      - build
