@@ -19,7 +19,10 @@ jobs:
             emulator -avd test -delay-adb -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           background: true
       - restore_cache:
-          key: gradle-v1-{{ checksum "build.gradle" }}
+          key: gradle-v1-{{ checksum "build.gradle" }} # Adjust path if necessary
+      - run:
+          name: Grant Execute Permissions to Gradle Wrapper
+          command: chmod +x ./gradlew
       - run:
           name: Assemble Debug Android Test
           command: ./gradlew assembleDebugAndroidTest
