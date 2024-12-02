@@ -27,6 +27,9 @@ jobs:
           name: Assemble Debug Android Test
           command: ./gradlew assembleDebugAndroidTest
       - run:
+          name: Build Android App Bundle
+          command: ./gradlew bundleRelease  # This builds the .AAB
+      - run:
           name: Wait for Emulator Boot
           command: circle-android wait-for-boot
       - run:
